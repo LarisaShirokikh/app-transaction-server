@@ -3,12 +3,18 @@ import { CategoryService } from './category.service';
 import { CategoryController } from './category.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Category } from './entities/category.entity';
-import { Transaction } from 'src/transaction/entities/transaction.entity';
-import { TransactionService } from 'src/transaction/transaction.service';
+import { Product } from 'src/product/entities/product.entity';
+import { ProductService } from 'src/product/product.service';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Category, Transaction])],
+  imports: [
+    TypeOrmModule.forFeature([Category, Product]),
+    MulterModule.register({
+      dest: './uploads',
+    }),
+  ],
   controllers: [CategoryController],
-  providers: [CategoryService, TransactionService],
+  providers: [CategoryService, ProductService],
 })
-export class CategoryModule {}
+export class CategoryModule { }

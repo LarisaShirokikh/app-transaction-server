@@ -1,25 +1,61 @@
-import { Transaction } from "src/transaction/entities/transaction.entity";
-import { User } from "src/user/entities/user.entity";
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { IsBoolean, IsNotEmpty, IsNumber } from 'class-validator';
+import { Chapter } from 'src/chapter/entities/chapter.entity';
+import { Product } from 'src/product/entities/product.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Category {
-    @PrimaryGeneratedColumn()
-    id: number
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    title: string
+  @Column()
+  name: string;
 
-    @ManyToOne(()=> User, (user) => user.categories)
-    @JoinColumn({name: 'user_id'})
-    user: User;
+  @IsBoolean()
+  @Column({ type: 'boolean' })
+  atHome: boolean;
 
-    @OneToMany(()=> Transaction, (transaction) => transaction.category)
-    transaction: Transaction[]
+  @IsBoolean()
+  @Column({ type: 'boolean' })
+  forOne: boolean;
 
-    @CreateDateColumn()
-    createdAt: Date
+  @IsBoolean()
+  @Column({ type: 'boolean' })
+  forLeftMenu: boolean;
 
-    @UpdateDateColumn()
-    updatedAt: Date
+  @IsBoolean()
+  @Column({ type: 'boolean' })
+  popular: boolean;
+
+  @IsNumber({}, { message: 'Новая цена продукта должна быть числом' })
+  @Column({ nullable: true })
+  price: number;
+
+  @Column('simple-array', { nullable: true })
+  photo: string[];
+
+  @Column({ nullable: true })
+  description: string;
+
+  @ManyToMany(() => Product, (product) => product.category)
+  @JoinColumn()
+  product: Product[];
+
+  @ManyToMany(() => Chapter, (chapter) => chapter.category)
+  @JoinColumn()
+  chapter: Chapter[];
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

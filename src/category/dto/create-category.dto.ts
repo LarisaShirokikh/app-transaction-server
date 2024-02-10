@@ -1,10 +1,39 @@
-import { IsNotEmpty, IsOptional } from "class-validator";
-import { User } from "src/user/entities/user.entity";
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateCategoryDto {
-    @IsNotEmpty()
-    title: string
-    
-    @IsOptional()
-    user?: User
+  @IsNotEmpty()
+  name: string;
+
+  @IsOptional()
+  @IsNumber({}, { message: 'Цена продукта должна быть числом' })
+  price?: number;
+
+  @IsBoolean()
+  popular?: boolean;
+
+  @IsString({ message: 'Неверный формат значения фото' })
+  @IsOptional()
+  photo?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isHome?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  forOne?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  forLeftMenu?: boolean;
+
+  @IsString({ message: 'Неверный формат значения описания' })
+  @IsOptional()
+  description?: string;
 }

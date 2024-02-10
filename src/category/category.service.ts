@@ -1,69 +1,99 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Category } from './entities/category.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CreateCategoryDto } from './dto/create-category.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Injectable()
 export class CategoryService {
   constructor(
     @InjectRepository(Category)
-    private readonly categoryRepository: Repository<Category>
-  ) { }
-  async create(createCategoryDto: CreateCategoryDto, id: number) {
-    const isExist = await this.categoryRepository.findBy({
-      user: { id },
-      title: createCategoryDto.title
-    })
-    if (isExist.length) throw new BadRequestException('Такая категория уже есть')
-    const category = {
-      title: createCategoryDto.title,
-      user: { id }
+    private readonly categoryRepository: Repository<Category>,
+  ) {}
+
+  async createCategory(
+    createCategoryDto: CreateCategoryDto,
+    photoType: string, // Добавляем параметр photoType
+    photoFileName: string | null, // Модифицируем тип параметра
+  ): Promise<Category> {
+    let photoPath: string | null = null;
+
+    if (photoType === 'link') {
+      // Обработка случая, когда приходит ссылка на фото
+      photoPath = createCategoryDto.photo;
+    } else if (photoType === 'file' && photoFileName) {
+      // Обработка случая, когда приходит файл с фото
+      photoPath = `/uploads/${photoFileName}`;
     }
-    return await this.categoryRepository.save(category)
+
+    const category = this.categoryRepository.create({
+      ...createCategoryDto,
+      photo: photoPath ? [photoPath] : null, // Используем массив, чтобы сохранить логику вашего кода
+    });
+
+    return this.categoryRepository.save(category);
   }
 
-  async findAll(id: number) {
-    return await this.categoryRepository.find({
+  async findAll() {
+    const categories = await this.categoryRepository.find();
+    return categories;
+  }
+
+  async getCatalogsForLeftMenu() {
+    const categories = await this.categoryRepository.find({
       where: {
-        user: { id }
+        forLeftMenu: true,
       },
-      relations: {
-        transaction: true
-      }
-
-    })
+    });
+    return categories;
   }
 
-  async findOne(id: number) {
-    const category = await this.categoryRepository.findOne({
-      where:
-        { id },
-      relations: {
-        user: true,
-        transaction: true
-      },
-    })
-    if (!category) throw new NotFoundException("Категория не найдена")
-    return category
+  async findIndex(index: string) {
+    let whereCondition: object = {};
+
+    if (index === '0') {
+      whereCondition = { atHome: false };
+    } else if (index === '1') {
+      whereCondition = { atHome: true };
+    } else {
+      throw new NotFoundException('Некорректный индекс');
+    }
+
+    const categories = await this.categoryRepository.find({
+      where: whereCondition,
+    });
+
+    if (!categories || categories.length === 0) {
+      throw new NotFoundException('Категории не найдены');
+    }
+
+    return categories;
   }
 
-  async update(id: number, updateCategoryDto: UpdateCategoryDto) {
+  async update(
+    id: number,
+    updateCategoryDto: UpdateCategoryDto,
+    photoFileName: string,
+  ) {
     const category = await this.categoryRepository.findOne({
-      where:
-        { id }
-    })
-    if (!category) throw new NotFoundException("Категория не найдена")
-    return await this.categoryRepository.update(id, updateCategoryDto)
+      where: { id },
+    });
+    if (!category) throw new NotFoundException('Категория не найдена');
+
+    return await this.categoryRepository.update(id, {
+      ...updateCategoryDto,
+      photo: [`/uploads/${photoFileName}`],
+    });
   }
 
   async remove(id: number) {
     const category = await this.categoryRepository.findOne({
-      where:
-        { id }
-    })
-    if (!category) throw new NotFoundException("Категория не найдена")
-    return this.categoryRepository.delete(id)
+      where: { id },
+    });
+    if (!category) throw new NotFoundException('Категория не найдена');
+    await this.categoryRepository.delete(id);
+
+    return { message: 'Категория успешно удалена' };
   }
 }

@@ -1,28 +1,40 @@
-import { Category } from "src/category/entities/category.entity";
-import { Transaction } from "src/transaction/entities/transaction.entity";
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn,  UpdateDateColumn } from "typeorm";
+import { Review } from 'src/review/entities/review.entity';
+import { Video } from 'src/video/entities/video.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
-
 export class User {
-    @PrimaryGeneratedColumn()
-    id: number
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    email: string
+  @Column()
+  email: string;
 
-    @Column()
-    password: string;
+  @Column({ default: false })
+  isAdmin: boolean;
 
-    @OneToMany(()=> Category, (category) => category.user, {onDelete: 'CASCADE'})
-    categories: Category[]
+  @Column({ default: false })
+  isSuperAdmin: boolean;
 
-    @OneToMany(()=> Transaction, (transaction) => transaction.user, {onDelete: 'CASCADE'})
-    transactions: Transaction[]
+  @Column()
+  password: string;
 
-    @CreateDateColumn()
-    createdAt: Date
+  @OneToMany(() => Video, (video) => video.user)
+  videos: Video[];
 
-    @UpdateDateColumn()
-    updatedAt: Date
+  @OneToMany(() => Review, (review) => review.user)
+  reviews: Review[];
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
