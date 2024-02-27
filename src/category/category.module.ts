@@ -17,4 +17,4 @@ import { MulterModule } from '@nestjs/platform-express';
   controllers: [CategoryController],
   providers: [CategoryService, ProductService],
 })
-export class CategoryModule { }
+export class CategoryModule {}

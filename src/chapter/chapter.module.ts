@@ -15,6 +15,6 @@ import { ChapterController } from './chapter.controller';
     }),
   ],
   controllers: [ChapterController],
-  providers: [ChapterService, CategoryService]
+  providers: [ChapterService, CategoryService],
 })
 export class ChapterModule {}

@@ -20,6 +20,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ProductService } from './product.service';
 import { ProductCsv } from './type/csvType';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Product } from './entities/product.entity';
 
 @Controller('product')
 export class ProductController {
@@ -31,11 +32,12 @@ export class ProductController {
   async create(
     @UploadedFile() photo,
     @Body() createProductDto: CreateProductDto,
-  ) {
+  ): Promise<Product> {
     try {
       const savedProduct = await this.productService.create(
         createProductDto,
-        photo.filename,
+        photo ? 'file' : 'link', // Определяем тип фото в зависимости от наличия файла
+        photo ? photo.filename : null,
       );
 
       return savedProduct;
@@ -73,9 +75,8 @@ export class ProductController {
 
   @Get()
   findAll() {
-    return this.productService.findAll()
+    return this.productService.findAll();
   }
- 
 
   @Get(':id')
   findOne(@Param('id') id: number) {
@@ -85,6 +86,18 @@ export class ProductController {
     } catch (error) {
       console.error('Error in findOne controller:', error);
       throw error;
+    }
+  }
+
+  @Get(':catalogId')
+  async findByCatalogId(@Param('catalogId') catalogId: number) {
+    try {
+      const products = await this.productService.findByCatalogId(catalogId);
+      return products;
+    } catch (error) {
+      throw new BadRequestException(
+        `Ошибка при получении продуктов: ${error.message}`,
+      );
     }
   }
 

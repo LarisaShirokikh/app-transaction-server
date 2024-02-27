@@ -11,7 +11,7 @@ import { MulterModule } from '@nestjs/platform-express';
   imports: [
     TypeOrmModule.forFeature([Product, Category]),
     MulterModule.register({
-      dest: './doorsPhoto',
+      dest: './uploads',
     }),
   ],
   controllers: [ProductController],

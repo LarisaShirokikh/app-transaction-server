@@ -70,6 +70,7 @@ export class CreateProductDto {
   @IsString({ message: 'Неверный формат значения петель' })
   @IsOptional()
   hinges?: string;
+  
 
   @IsString({ message: 'Неверный формат значения защиты от снятия полотна' })
   @IsOptional()

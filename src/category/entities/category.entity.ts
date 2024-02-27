@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -19,22 +20,6 @@ export class Category {
   @Column()
   name: string;
 
-  @IsBoolean()
-  @Column({ type: 'boolean' })
-  atHome: boolean;
-
-  @IsBoolean()
-  @Column({ type: 'boolean' })
-  forOne: boolean;
-
-  @IsBoolean()
-  @Column({ type: 'boolean' })
-  forLeftMenu: boolean;
-
-  @IsBoolean()
-  @Column({ type: 'boolean' })
-  popular: boolean;
-
   @IsNumber({}, { message: 'Новая цена продукта должна быть числом' })
   @Column({ nullable: true })
   price: number;
@@ -46,11 +31,13 @@ export class Category {
   description: string;
 
   @ManyToMany(() => Product, (product) => product.category)
-  @JoinColumn()
+  @JoinTable()
   product: Product[];
 
+  @Column('simple-array')
+  chapterId: number[];
+
   @ManyToMany(() => Chapter, (chapter) => chapter.category)
-  @JoinColumn()
   chapter: Chapter[];
 
   @CreateDateColumn()

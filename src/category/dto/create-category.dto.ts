@@ -14,26 +14,19 @@ export class CreateCategoryDto {
   @IsNumber({}, { message: 'Цена продукта должна быть числом' })
   price?: number;
 
-  @IsBoolean()
-  popular?: boolean;
-
   @IsString({ message: 'Неверный формат значения фото' })
   @IsOptional()
   photo?: string;
 
-  @IsBoolean()
-  @IsOptional()
-  isHome?: boolean;
-
-  @IsBoolean()
-  @IsOptional()
-  forOne?: boolean;
-
-  @IsBoolean()
-  @IsOptional()
-  forLeftMenu?: boolean;
 
   @IsString({ message: 'Неверный формат значения описания' })
   @IsOptional()
   description?: string;
+
+  @IsNotEmpty({ message: 'Каталог не может быть пустым' })
+  @IsNumber(
+    { allowNaN: false, allowInfinity: false, maxDecimalPlaces: 0 },
+    { message: 'Неверный формат значения категории' },
+  )
+  chapterId: number[];
 }

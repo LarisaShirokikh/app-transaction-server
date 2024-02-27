@@ -16,8 +16,8 @@ import { CategoryService } from './category.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './entities/category.entity';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Controller('categories')
 export class CategoryController {
@@ -53,6 +53,7 @@ export class CategoryController {
     @UploadedFile() photo,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ) {
+    console.log('update', updateCategoryDto)
     return this.categoryService.update(+id, updateCategoryDto, photo.filename);
   }
 
@@ -66,16 +67,61 @@ export class CategoryController {
     return this.categoryService.findIndex(index);
   }
 
-  @Get(':le')
-  getCatalogsForLeftMenu(@Req() req) {
-    console.log('Request received:', req);
-    return this.categoryService.getCatalogsForLeftMenu();
-  }
-
-  
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string) {
     return this.categoryService.remove(+id);
+  }
+
+  // Добавляем метод, который будет возвращать каталоги по идентификатору главы
+  @Get('by-chapter/:chapterId')
+  async findByChapterId(@Param('chapterId') chapterId: number) {
+    console.log('findByChapterId', chapterId);
+    try {
+      const catalogs = await this.categoryService.findByChapterId(chapterId);
+      return catalogs;
+    } catch (error) {
+      throw new BadRequestException(
+        `Ошибка при получении каталогов: ${error.message}`,
+      );
+    }
+  }
+
+
+  @Get('catalog/:catalogId')
+  async findByCategoriesId(@Param('catalogId') catalogId: number) {
+    console.log('async findByCategoriesId(@Param', catalogId);
+    try {
+      const catalog = await this.categoryService.findOne(catalogId);
+      return catalog;
+    } catch (error) {
+      throw new BadRequestException(
+        `Ошибка при получении каталогов: ${error.message}`,
+      );
+    }
+  }
+
+  // @Get('populyar/:populyar')
+  // async populyar(@Req() req) {
+  //   try {
+  //     const catalogs = await this.categoryService.findPopulyar();
+  //     return catalogs;
+  //   } catch (error) {
+  //     throw new BadRequestException(
+  //       `Ошибка при получении каталогов: ${error.message}`,
+  //     );
+  //   }
+  // }
+
+  @Get('categories/category')
+  async wite(@Req() req) {
+    try {
+      const catalogs = await this.categoryService.findWite();
+      return catalogs;
+    } catch (error) {
+      throw new BadRequestException(
+        `Ошибка при получении каталогов: ${error.message}`,
+      );
+    }
   }
 }

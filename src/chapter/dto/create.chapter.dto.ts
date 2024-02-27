@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateChapterDto {
   @IsNotEmpty()
@@ -11,4 +11,8 @@ export class CreateChapterDto {
   @IsString({ message: 'Неверный формат значения описания' })
   @IsOptional()
   description?: string;
+
+  @IsNotEmpty({ message: 'Каталог не может быть пустым' })
+  @IsNumber({}, { message: 'Неверный формат значения категории' })
+  category: number[];
 }

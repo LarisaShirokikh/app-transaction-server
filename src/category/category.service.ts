@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { Category } from './entities/category.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -26,12 +26,15 @@ export class CategoryService {
       // Обработка случая, когда приходит файл с фото
       photoPath = `/uploads/${photoFileName}`;
     }
-
+    //@ts-ignore
     const category = this.categoryRepository.create({
-      ...createCategoryDto,
-      photo: photoPath ? [photoPath] : null, // Используем массив, чтобы сохранить логику вашего кода
+      name: createCategoryDto.name,
+      price: createCategoryDto.price,
+      photo: photoPath ? [photoPath] : null,
+      description: createCategoryDto.description,
+      chapter: createCategoryDto.chapterId, // Убедитесь, что chapter имеет правильный тип
     });
-
+    //@ts-ignore
     return this.categoryRepository.save(category);
   }
 
@@ -40,25 +43,9 @@ export class CategoryService {
     return categories;
   }
 
-  async getCatalogsForLeftMenu() {
-    const categories = await this.categoryRepository.find({
-      where: {
-        forLeftMenu: true,
-      },
-    });
-    return categories;
-  }
-
   async findIndex(index: string) {
     let whereCondition: object = {};
 
-    if (index === '0') {
-      whereCondition = { atHome: false };
-    } else if (index === '1') {
-      whereCondition = { atHome: true };
-    } else {
-      throw new NotFoundException('Некорректный индекс');
-    }
 
     const categories = await this.categoryRepository.find({
       where: whereCondition,
@@ -71,6 +58,21 @@ export class CategoryService {
     return categories;
   }
 
+  // async findPopulyar() {
+  //   const categories = await this.categoryRepository.find({
+  //     where: { popular: true },
+  //   });
+  //   return categories;
+  // }
+
+  async findWite() {
+    const whiteDoorsCatalogs = await this.categoryRepository.find({
+      where: { chapter: { id: 1 } },
+    });
+
+    return whiteDoorsCatalogs;
+  }
+
   async update(
     id: number,
     updateCategoryDto: UpdateCategoryDto,
@@ -80,7 +82,7 @@ export class CategoryService {
       where: { id },
     });
     if (!category) throw new NotFoundException('Категория не найдена');
-
+    //@ts-ignore
     return await this.categoryRepository.update(id, {
       ...updateCategoryDto,
       photo: [`/uploads/${photoFileName}`],
@@ -95,5 +97,36 @@ export class CategoryService {
     await this.categoryRepository.delete(id);
 
     return { message: 'Категория успешно удалена' };
+  }
+
+  async findByChapterId(chapterId: number): Promise<Category[]> {
+    try {
+      // Находим все каталоги, связанные с указанным разделом (chapterId)
+      const catalogs = await this.categoryRepository.find({
+        where: { chapterId }
+      });
+      return catalogs;
+    } catch (error) {
+      console.error('Error in findByChapterId service:', error);
+      throw error;
+    }
+  }
+
+  async findByCatalogId(catalogId: number): Promise<Category> {
+    return await this.categoryRepository.findOne({
+      where: { id: catalogId },
+    });
+  }
+
+
+
+  async findOne(id: number) {
+    try {
+      const chapter = this.categoryRepository.findOneBy({ id: +id });
+      return chapter;
+    } catch (error) {
+      console.error('Error in findOneBy service:', error);
+      throw error;
+    }
   }
 }

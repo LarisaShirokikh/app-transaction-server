@@ -14,31 +14,22 @@ export class ProductService {
 
   async create(
     createProductDto: CreateProductDto,
-    photoFileName: string,
+    photoType: string, // Добавляем параметр photoType
+    photoFileName: string | null,
   ): Promise<Product> {
+    let photoPath: string | null = null;
+
+    if (photoType === 'link') {
+      //@ts-ignore
+      photoPath = createProductDto.photo;
+    } else if (photoType === 'file' && photoFileName) {
+      photoPath = `/uploads/${photoFileName}`;
+    }
+
     //@ts-ignore
     const newProduct = this.productRepository.create({
       ...createProductDto,
-      // name: createProductDto.name,
-      // newPrice: createProductDto.newPrice,
-      // oldPrice: createProductDto.oldPrice,
-      // isOnSale: createProductDto.isOnSale || false, // Default to false if not provided
-      // isNew: createProductDto.isNew || false,
-      // inStock: createProductDto.inStock || true, // Default to false if not provided
-      // construction: createProductDto.construction,
-      // sealingContours: createProductDto.sealingContours,
-      // thicknessWeight: createProductDto.thicknessWeight,
-      // weight: createProductDto.weight,
-      // insulation: createProductDto.insulation,
-      // mainLock: createProductDto.mainLock,
-      // additionalLock: createProductDto.additionalLock,
-      // exteriorFinish: createProductDto.exteriorFinish,
-      // interiorFinish: createProductDto.interiorFinish,
-      // hinges: createProductDto.hinges,
-      // doorProtection: createProductDto.doorProtection,
-      // description: createProductDto.description,
-      // category: createProductDto.category,
-      photo: [`/doorsPhoto/${photoFileName}`],
+      photo: photoPath ? [photoPath] : null,
     });
     //@ts-ignore
     return await this.productRepository.save(newProduct);
@@ -67,6 +58,12 @@ export class ProductService {
     }
   }
 
+  async findByCatalogId(catalogId: number): Promise<Product[]> {
+    return await this.productRepository.find({
+      where: { category: { id: catalogId } },
+    });
+  }
+
   async findAllWithPagination(page: number, limit: number): Promise<Product[]> {
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
@@ -78,6 +75,4 @@ export class ProductService {
       .take(limit)
       .getMany();
   }
-  
-  
 }

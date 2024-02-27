@@ -16,8 +16,10 @@ export class Chapter {
   description: string;
 
   @ManyToMany(() => Category, (category) => category.chapter)
-  @JoinColumn()
   category: Category[];
+
+  @Column('simple-array', { nullable: true })
+  categoryId: number[];
 
   @CreateDateColumn()
   createdAt: Date;
