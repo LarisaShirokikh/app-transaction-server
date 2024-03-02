@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { FindManyOptions, Repository } from 'typeorm';
+import { FindManyOptions, In, Repository } from 'typeorm';
 import { Category } from './entities/category.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -28,10 +28,8 @@ export class CategoryService {
     }
     //@ts-ignore
     const category = this.categoryRepository.create({
-      name: createCategoryDto.name,
-      price: createCategoryDto.price,
+      ...createCategoryDto,
       photo: photoPath ? [photoPath] : null,
-      description: createCategoryDto.description,
       chapter: createCategoryDto.chapterId, // Убедитесь, что chapter имеет правильный тип
     });
     //@ts-ignore
@@ -103,7 +101,9 @@ export class CategoryService {
     try {
       // Находим все каталоги, связанные с указанным разделом (chapterId)
       const catalogs = await this.categoryRepository.find({
-        where: { chapterId }
+        where: {
+          chapterId: In([chapterId]),
+        },
       });
       return catalogs;
     } catch (error) {

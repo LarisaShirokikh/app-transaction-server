@@ -1,5 +1,5 @@
 import { Category } from "src/category/entities/category.entity";
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Chapter {
@@ -18,9 +18,9 @@ export class Chapter {
   @ManyToMany(() => Category, (category) => category.chapter)
   category: Category[];
 
-  @Column('simple-array', { nullable: true })
-  categoryId: number[];
-
+  // @Column('simple-array')
+  // categoryId: number[];
+  
   @CreateDateColumn()
   createdAt: Date;
 

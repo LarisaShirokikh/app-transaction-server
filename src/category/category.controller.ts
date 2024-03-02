@@ -30,7 +30,6 @@ export class CategoryController {
     @UploadedFile() photo,
     @Body() createCategoryDto: CreateCategoryDto,
   ): Promise<Category> {
-    console.log('create category', createCategoryDto);
     try {
       const savedCategory = await this.categoryService.createCategory(
         createCategoryDto,

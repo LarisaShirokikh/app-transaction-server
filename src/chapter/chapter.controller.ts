@@ -74,10 +74,9 @@ export class ChapterController {
     }
   }
 
-  @Get('category/:chapterId') // Новый маршрут для получения каталогов по идентификатору раздела
+  @Get('category/:chapterId') 
   async findCatalogsByChapterId(@Param('chapterId') id: number) {
     try {
-      // Получаем все каталоги, связанные с указанным разделом
       const catalogs = await this.categoryService.findByChapterId(id);
       return catalogs;
     } catch (error) {
