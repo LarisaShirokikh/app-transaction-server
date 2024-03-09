@@ -32,6 +32,9 @@ export class User {
   @OneToMany(() => Review, (review) => review.user)
   reviews: Review[];
 
+  @Column('simple-array', { nullable: true })
+  reviewId: number[];
+
   @CreateDateColumn()
   createdAt: Date;
 

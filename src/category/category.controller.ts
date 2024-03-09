@@ -77,7 +77,7 @@ export class CategoryController {
   async findByChapterId(@Param('chapterId') chapterId: number) {
     console.log('findByChapterId', chapterId);
     try {
-      const catalogs = await this.categoryService.findByChapterId(chapterId);
+      const catalogs = await this.categoryService.findByChapterId([chapterId]);
       return catalogs;
     } catch (error) {
       throw new BadRequestException(

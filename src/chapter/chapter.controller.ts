@@ -75,7 +75,7 @@ export class ChapterController {
   }
 
   @Get('category/:chapterId') 
-  async findCatalogsByChapterId(@Param('chapterId') id: number) {
+  async findCatalogsByChapterId(@Param('chapterId') id: number[]) {
     try {
       const catalogs = await this.categoryService.findByChapterId(id);
       return catalogs;

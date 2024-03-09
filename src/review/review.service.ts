@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateReviewDto } from './dto/create.review.dto';
 import { Photo } from './entities/photo.entity';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class ReviewService {
@@ -17,25 +18,22 @@ export class ReviewService {
   async create(
     createReviewDto: CreateReviewDto,
     userId: number,
+    photoType: string,
+    photoFileName: string | null,
   ): Promise<Review> {
-    const rating =
-      typeof createReviewDto.rating === 'number' ? createReviewDto.rating : 0;
-    const savedPhoto = await this.photoRepository.save({
-      filename: createReviewDto.photos[0], // Предполагая, что у вас только одно фото
-    });
+    let photoPath: string | null = null;
+
+    if (photoType === 'file' && photoFileName) {
+      photoPath = `/uploads/${photoFileName}`;
+    }
 
     const review = this.reviewRepository.create({
       ...createReviewDto,
-      rating,
-      user: { id: userId },
-      photo: [`/upload/${savedPhoto.filename}`],
+      userId: userId,
+      photo: photoPath ? [photoPath] : null,
     });
     console.log('Review before saving:', review);
-
-    const savedReview = await this.reviewRepository.save(review);
-    console.log('Saved review:', savedReview);
-
-    return savedReview;
+    return await this.reviewRepository.save(review);
   }
 
   async findAll() {

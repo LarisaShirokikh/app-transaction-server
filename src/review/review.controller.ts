@@ -21,16 +21,27 @@ export class ReviewController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('photo'))
   async create(
-    @Body()
-    createReviewDto: CreateReviewDto,
+    @UploadedFile() photo: Express.Multer.File,
+    @Body() createReviewDto: CreateReviewDto,
     @Req() req,
   ) {
     console.log('Received createReviewDto:', createReviewDto);
-    // Получаем текущего пользователя из запроса
-    const user = req.user;
-    // Вызываем сервис для создания отзыва
-    return this.reviewService.create(createReviewDto, user.id);
+    try {
+      const user = req.user;
+      const sevedReview = await this.reviewService.create(
+        createReviewDto,
+        user.id,
+        'file',
+        photo.filename,
+      );
+      return sevedReview;
+    } catch (error) {
+      throw new BadRequestException(
+        `Ошибка при создании отзыва: ${error.message}`,
+      );
+    }
   }
 
   @Get()

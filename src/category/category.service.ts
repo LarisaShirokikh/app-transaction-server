@@ -44,7 +44,6 @@ export class CategoryService {
   async findIndex(index: string) {
     let whereCondition: object = {};
 
-
     const categories = await this.categoryRepository.find({
       where: whereCondition,
     });
@@ -97,14 +96,14 @@ export class CategoryService {
     return { message: 'Категория успешно удалена' };
   }
 
-  async findByChapterId(chapterId: number): Promise<Category[]> {
+  async findByChapterId(chapterId: number[]): Promise<Category[]> {
     try {
-      // Находим все каталоги, связанные с указанным разделом (chapterId)
-      const catalogs = await this.categoryRepository.find({
-        where: {
-          chapterId: In([chapterId]),
-        },
-      });
+      const catalogs = await this.categoryRepository
+        .createQueryBuilder('category')
+        .where(`category.chapterId LIKE :chapterId`, {
+          chapterId: `%${chapterId}%`,
+        })
+        .getMany();
       return catalogs;
     } catch (error) {
       console.error('Error in findByChapterId service:', error);
@@ -117,8 +116,6 @@ export class CategoryService {
       where: { id: catalogId },
     });
   }
-
-
 
   async findOne(id: number) {
     try {
