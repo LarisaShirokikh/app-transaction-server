@@ -6,14 +6,15 @@ import {
   IsOptional,
 } from 'class-validator';
 import { Category } from 'src/category/entities/category.entity';
+import { Review } from 'src/review/entities/review.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  JoinColumn,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -29,8 +30,9 @@ export class Product {
   name: string;
 
   @ManyToMany(() => Category, (category) => category.product)
-  @JoinTable()
   category: Category[];
+  @Column({ default: null })
+  categoryId: string;
 
   @IsBoolean()
   @Column({ default: true })
@@ -103,6 +105,9 @@ export class Product {
 
   @Column('simple-array', { nullable: true })
   photo: string[];
+
+  @OneToMany(() => Review, (review) => review.product) // Указываем связь "один ко многим" с сущностью Review
+  reviews: Review[];
 
   @CreateDateColumn()
   createdAt: Date;

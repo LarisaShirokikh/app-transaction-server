@@ -70,7 +70,6 @@ export class CreateProductDto {
   @IsString({ message: 'Неверный формат значения петель' })
   @IsOptional()
   hinges?: string;
-  
 
   @IsString({ message: 'Неверный формат значения защиты от снятия полотна' })
   @IsOptional()
@@ -81,11 +80,8 @@ export class CreateProductDto {
   description?: string;
 
   @IsNotEmpty({ message: 'Каталог не может быть пустым' })
-  @IsNumber(
-    { allowNaN: false, allowInfinity: false, maxDecimalPlaces: 0 },
-    { message: 'Неверный формат значения каталога' },
-  )
-  category: number;
+  @IsString()
+  categoryId: string;
 
   @IsString({ message: 'Неверный формат значения фото' })
   @IsOptional()

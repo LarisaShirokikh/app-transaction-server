@@ -1,3 +1,4 @@
+import { Product } from 'src/product/entities/product.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
   Column,
@@ -29,6 +30,10 @@ export class Review {
   @ManyToOne(() => User, (user) => user.reviews)
   @JoinColumn({ name: 'userId' }) // Укажите имя колонки для внешнего ключа, если оно отличается от "userId"
   user: User;
+
+  @ManyToOne(() => Product, (product) => product.reviews) // Указываем связь "многие к одному" с сущностью Product
+  @JoinColumn({ name: 'productId' }) // Укажите имя колонки для внешнего ключа, если оно отличается от "productId"
+  product: Product;
 
   @Column()
   userId: number;
