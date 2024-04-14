@@ -40,10 +40,10 @@ export class UserService {
     return `This action returns all user`;
   }
 
-  async findOne(email: string): Promise<User | undefined> {
+  async findOne(phone: string): Promise<User | undefined> {
     return await this.userRepository.findOne({
       where: {
-        email: email,
+        phone: phone,
       },
     });
   }

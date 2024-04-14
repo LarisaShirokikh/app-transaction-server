@@ -17,6 +17,7 @@ import { VideoModule } from './video/video.module';
 import { ServiceModule } from './service/service.module';
 import { ReviewModule } from './review/review.module';
 import { ChapterModule } from './chapter/chapter.module';
+import { ConfirmationCodeService } from './auth/auth.code.servise';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { ChapterModule } from './chapter/chapter.module';
     ServiceModule,
     ReviewModule,
     ChapterModule,
+    
   ],
   providers: [],
 })
