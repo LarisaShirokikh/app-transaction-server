@@ -18,6 +18,10 @@ export class User {
 
   @Column({ default: false })
   isSuperAdmin: boolean;
+  
+  @Column({ nullable: true })
+  password: string;
+
 
   @Column({ nullable: true })
   phone: string;
@@ -31,7 +35,10 @@ export class User {
   @OneToMany(() => Review, (review) => review.user)
   reviews: Review[];
 
-  @OneToMany(() => ConfirmationCode, (confirmationCode) => confirmationCode.user)
+  @OneToMany(
+    () => ConfirmationCode,
+    (confirmationCode) => confirmationCode.user,
+  )
   confirmationCodes: ConfirmationCode[]; // Отношение с ConfirmationCode
 
   @Column('simple-array', { nullable: true })
