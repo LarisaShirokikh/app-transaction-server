@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateChapterDto } from './dto/create.chapter.dto';
 import { Category } from 'src/category/entities/category.entity';
 import { UpdateCategoryDto } from 'src/category/dto/update-category.dto';
+import { UpdateChapterDto } from './dto/update.chapter.dto';
 
 @Injectable()
 export class ChapterService {
@@ -57,7 +58,7 @@ export class ChapterService {
   async update(
     id: number,
     photoType: string,
-    updateCategoryDto: UpdateCategoryDto,
+    updateChapterDto: UpdateChapterDto,
     photoFileName: string | null,
   ): Promise<Chapter> {
     try {
@@ -69,18 +70,31 @@ export class ChapterService {
 
       if (photoType === 'link') {
         // Обработка случая, когда приходит ссылка на фото
-        photoPath = updateCategoryDto.photo;
+        photoPath = updateChapterDto.photo;
       } else if (photoType === 'file' && photoFileName) {
         // Обработка случая, когда приходит файл с фото
         photoPath = `/uploads/${photoFileName}`;
       }
       // Обновим поля раздела
-      chapter.name = updateCategoryDto.name;
-      chapter.description = updateCategoryDto.description;
+      chapter.name = updateChapterDto.name;
+      chapter.description = updateChapterDto.description;
       chapter.photo = photoPath ? [photoPath] : null;
 
       // Сохраним обновленный раздел
       return this.chapterRepository.save(chapter);
+    } catch (error) {
+      console.error('Error in findOneBy service:', error);
+      throw error;
+    }
+  }
+
+  async deleteChapterById(id: number) {
+    try {
+      const chapter = await this.chapterRepository.findOneBy({ id: id });
+      if (!chapter) {
+        throw new Error('Раздел не найден');
+      }
+      return this.chapterRepository.delete({ id: id });
     } catch (error) {
       console.error('Error in findOneBy service:', error);
       throw error;

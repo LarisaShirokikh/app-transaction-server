@@ -48,12 +48,25 @@ export class CategoryController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('photo'))
   update(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @UploadedFile() photo,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ) {
-    console.log('update', updateCategoryDto)
-    return this.categoryService.update(+id, updateCategoryDto, photo.filename);
+    console.log('update', updateCategoryDto);
+    try {
+      const updated = this.categoryService.update(
+        id,
+        updateCategoryDto,
+        photo ? 'file' : 'link', // Определяем тип фото в зависимости от наличия файла
+        photo ? photo.filename : null,
+      );
+      console.log('updated', updated);
+      return updated;
+    } catch (error) {
+      throw new BadRequestException(
+        `Ошибка при обноалении категории: ${error.message}`,
+      );
+    }
   }
 
   @Get()
@@ -68,16 +81,22 @@ export class CategoryController {
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
-  remove(@Param('id') id: string) {
-    return this.categoryService.remove(+id);
+  remove(@Param('id') id: number) {
+    try {
+      return this.categoryService.remove(id);
+    } catch (error) {
+      console.error('Error in findOne controller:', error);
+      throw error;
+    }
   }
 
   // Добавляем метод, который будет возвращать каталоги по идентификатору главы
-  @Get('by-chapter/:chapterId')
-  async findByChapterId(@Param('chapterId') chapterId: number) {
-    console.log('findByChapterId', chapterId);
+  @Get('chapter/:chapterName')
+  async findBychapterName(@Param('chapterName') chapterName: string) {
     try {
-      const catalogs = await this.categoryService.findByChapterId([chapterId]);
+      const catalogs = await this.categoryService.findByChapterName(
+        chapterName,
+      );
       return catalogs;
     } catch (error) {
       throw new BadRequestException(
@@ -86,10 +105,8 @@ export class CategoryController {
     }
   }
 
-
   @Get('catalog/:catalogId')
   async findByCategoriesId(@Param('catalogId') catalogId: number) {
-    console.log('async findByCategoriesId(@Param', catalogId);
     try {
       const catalog = await this.categoryService.findOne(catalogId);
       return catalog;
@@ -100,17 +117,17 @@ export class CategoryController {
     }
   }
 
-  // @Get('populyar/:populyar')
-  // async populyar(@Req() req) {
-  //   try {
-  //     const catalogs = await this.categoryService.findPopulyar();
-  //     return catalogs;
-  //   } catch (error) {
-  //     throw new BadRequestException(
-  //       `Ошибка при получении каталогов: ${error.message}`,
-  //     );
-  //   }
-  // }
+  @Get('category/:newCatalogName')
+  async findByCategoryName(@Param('newCatalogName') newCatalogName: string) {
+    try {
+      const catalog = await this.categoryService.findByName(newCatalogName);
+      return catalog;
+    } catch (error) {
+      throw new BadRequestException(
+        `Ошибка при получении каталогов: ${error.message}`,
+      );
+    }
+  }
 
   @Get('categories/category')
   async wite(@Req() req) {

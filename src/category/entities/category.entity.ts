@@ -35,7 +35,7 @@ export class Category {
   product: Product[];
 
   @Column('simple-array')
-  chapterId: number[];
+  chapterName: string[];
 
   @ManyToMany(() => Chapter, (chapter) => chapter.category)
   chapter: Chapter[];

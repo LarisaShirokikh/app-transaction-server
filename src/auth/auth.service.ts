@@ -25,18 +25,7 @@ export class AuthService {
     if (!passIsMatch) throw new UnauthorizedException('Пароль некорректный');
     if (user && passIsMatch) return user;
     return null;
-    // const verificationCode = Math.floor(
-    //   100000 + Math.random() * 900000,
-    // ).toString();
-    // await this.smsService.sendSms(
-    //   phone,
-    //   `Your verification code is: ${verificationCode}`,
-    // );
-
-    // await this.сonfirmationCodeService.createConfirmationCode(
-    //   user,
-    //   verificationCode,
-    // );
+    
   }
 
   async login(user: IUser) {

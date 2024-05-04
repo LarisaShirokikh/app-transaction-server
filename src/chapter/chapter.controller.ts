@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Param, Post, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ChapterService } from './chapter.service';
 import { CreateChapterDto } from './dto/create.chapter.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -35,6 +35,20 @@ export class ChapterController {
     }
   }
 
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  async deleteChapter(@Param('id') id: number) {
+    try {
+      const catalogs = await this.chapterService.findOne(id);
+      if (catalogs) {
+        return await this.chapterService.deleteChapterById(id);
+      }
+    } catch (error) {
+      console.error('Error in findOne controller:', error);
+      throw error;
+    }
+  }
+
   @Get()
   findAll(@Req() req) {
     return this.chapterService.findAll();
@@ -44,7 +58,6 @@ export class ChapterController {
   async findOne(@Param('id') id: number) {
     try {
       const catalogs = await this.chapterService.findOne(id);
-      console.log('chapter found', catalogs);
       return catalogs;
     } catch (error) {
       console.error('Error in findOne controller:', error);
@@ -61,7 +74,6 @@ export class ChapterController {
     @Body() updateChapterDto: UpdateChapterDto,
   ) {
     try {
-      console.log('update', updateChapterDto);
       return await this.chapterService.update(
         +id,
         photo ? 'file' : 'link',
@@ -74,10 +86,10 @@ export class ChapterController {
     }
   }
 
-  @Get('category/:chapterId') 
-  async findCatalogsByChapterId(@Param('chapterId') id: number[]) {
+  @Get('category/:chapterName')
+  async findCatalogsByChapterId(@Param('chapterName') chapterName: string) {
     try {
-      const catalogs = await this.categoryService.findByChapterId(id);
+      const catalogs = await this.categoryService.findByChapterName(chapterName);
       return catalogs;
     } catch (error) {
       console.error('Error in findCatalogsByChapterId controller:', error);

@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { FindManyOptions, In, Repository } from 'typeorm';
+import {  Repository } from 'typeorm';
 import { Category } from './entities/category.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -15,7 +15,7 @@ export class CategoryService {
   async createCategory(
     createCategoryDto: CreateCategoryDto,
     photoType: string, // Добавляем параметр photoType
-    photoFileName: string | null, // Модифицируем тип параметра
+    photoFileName: string | null,
   ): Promise<Category> {
     let photoPath: string | null = null;
 
@@ -30,7 +30,7 @@ export class CategoryService {
     const category = this.categoryRepository.create({
       ...createCategoryDto,
       photo: photoPath ? [photoPath] : null,
-      chapter: createCategoryDto.chapterId, // Убедитесь, что chapter имеет правильный тип
+      chapter: createCategoryDto.name,
     });
     //@ts-ignore
     return this.categoryRepository.save(category);
@@ -47,20 +47,12 @@ export class CategoryService {
     const categories = await this.categoryRepository.find({
       where: whereCondition,
     });
-
     if (!categories || categories.length === 0) {
       throw new NotFoundException('Категории не найдены');
     }
 
     return categories;
   }
-
-  // async findPopulyar() {
-  //   const categories = await this.categoryRepository.find({
-  //     where: { popular: true },
-  //   });
-  //   return categories;
-  // }
 
   async findWite() {
     const whiteDoorsCatalogs = await this.categoryRepository.find({
@@ -73,40 +65,51 @@ export class CategoryService {
   async update(
     id: number,
     updateCategoryDto: UpdateCategoryDto,
-    photoFileName: string,
+    photoType: string,
+    photoFileName: string | null,
   ) {
-    const category = await this.categoryRepository.findOne({
-      where: { id },
-    });
+    const category = await this.categoryRepository.findBy({ id });
+    console.log('update  category', category);
     if (!category) throw new NotFoundException('Категория не найдена');
+
+    let photoPath: string | null = null;
+
+    if (photoType === 'link') {
+      // Обработка случая, когда приходит ссылка на фото
+      photoPath = updateCategoryDto.photo;
+    } else if (photoType === 'file' && photoFileName) {
+      // Обработка случая, когда приходит файл с фото
+      photoPath = `/uploads/${photoFileName}`;
+    }
     //@ts-ignore
     return await this.categoryRepository.update(id, {
       ...updateCategoryDto,
-      photo: [`/uploads/${photoFileName}`],
+      photo: photoPath ? [photoPath] : null,
     });
   }
 
   async remove(id: number) {
-    const category = await this.categoryRepository.findOne({
-      where: { id },
-    });
-    if (!category) throw new NotFoundException('Категория не найдена');
-    await this.categoryRepository.delete(id);
-
-    return { message: 'Категория успешно удалена' };
+    try {
+      const category = await this.categoryRepository.findOneBy({ id: id });
+      if (!category) throw new Error('Категория не найдена');
+      await this.categoryRepository.delete(id);
+    } catch (error) {
+      console.error('Error in findOneBy service:', error);
+      throw error;
+    }
   }
 
-  async findByChapterId(chapterId: number[]): Promise<Category[]> {
+  async findByChapterName(chapterName: string): Promise<Category[]> {
     try {
       const catalogs = await this.categoryRepository
         .createQueryBuilder('category')
-        .where(`category.chapterId LIKE :chapterId`, {
-          chapterId: `%${chapterId}%`,
+        .where('category.chapterName LIKE :chapterName', {
+          chapterName: `%${chapterName}%`,
         })
         .getMany();
       return catalogs;
     } catch (error) {
-      console.error('Error in findByChapterId service:', error);
+      console.error('Error in findByChapterName service:', error);
       throw error;
     }
   }
@@ -114,6 +117,12 @@ export class CategoryService {
   async findByCatalogId(catalogId: number): Promise<Category> {
     return await this.categoryRepository.findOne({
       where: { id: catalogId },
+    });
+  }
+
+  async findByName(newCatalogName: string): Promise<Category> {
+    return await this.categoryRepository.findOne({
+      where: { name: newCatalogName },
     });
   }
 

@@ -18,15 +18,11 @@ export class CreateCategoryDto {
   @IsOptional()
   photo?: string;
 
-
   @IsString({ message: 'Неверный формат значения описания' })
   @IsOptional()
   description?: string;
 
   @IsNotEmpty({ message: 'Каталог не может быть пустым' })
-  @IsNumber(
-    { allowNaN: false, allowInfinity: false, maxDecimalPlaces: 0 },
-    { message: 'Неверный формат значения категории' },
-  )
-  chapterId: number[];
+  @IsString()
+  chapterName: string[];
 }

@@ -26,6 +26,7 @@ export class UserService {
     const user = await this.userRepository.save({
       email: createUserDto.email,
       password: await argon2.hash(createUserDto.password),
+      name: createUserDto.name
     });
 
     const expiresIn = 24 * 60 * 60;

@@ -9,4 +9,7 @@ export class CreateUserDto {
 
   @MinLength(8, { message: 'Пароль должен быть не менее 8 символов' })
   password: string;
+
+  @IsNotEmpty()
+  name: string;
 }
