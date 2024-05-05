@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateReviewDto {
   @IsNotEmpty()
@@ -17,4 +17,3 @@ export class CreateReviewDto {
   @IsOptional()
   photo?: string[];
 }
-

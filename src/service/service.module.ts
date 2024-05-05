@@ -16,4 +16,3 @@ import { MulterModule } from '@nestjs/platform-express';
   providers: [ServicesService],
 })
 export class ServiceModule {}
-

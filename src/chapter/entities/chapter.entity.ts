@@ -1,5 +1,12 @@
-import { Category } from "src/category/entities/category.entity";
-import { Column, CreateDateColumn, Entity, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Category } from 'src/category/entities/category.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Chapter {
@@ -20,7 +27,7 @@ export class Chapter {
 
   // @Column('simple-array')
   // categoryId: number[];
-  
+
   @CreateDateColumn()
   createdAt: Date;
 

@@ -29,7 +29,11 @@ export class VideoController {
 
       console.log('User email:', userId);
       const filename = video.filename;
-      const savedVideo = await this.videoService.create(userId, filename, video);
+      const savedVideo = await this.videoService.create(
+        userId,
+        filename,
+        video,
+      );
 
       return {
         success: true,

@@ -25,4 +25,3 @@ export class CreateServiceDto {
 
   // Добавьте другие поля по необходимости
 }
-

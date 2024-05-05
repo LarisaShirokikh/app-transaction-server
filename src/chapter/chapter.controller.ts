@@ -1,4 +1,17 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Req,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ChapterService } from './chapter.service';
 import { CreateChapterDto } from './dto/create.chapter.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -89,7 +102,9 @@ export class ChapterController {
   @Get('category/:chapterName')
   async findCatalogsByChapterId(@Param('chapterName') chapterName: string) {
     try {
-      const catalogs = await this.categoryService.findByChapterName(chapterName);
+      const catalogs = await this.categoryService.findByChapterName(
+        chapterName,
+      );
       return catalogs;
     } catch (error) {
       console.error('Error in findCatalogsByChapterId controller:', error);
@@ -97,5 +112,3 @@ export class ChapterController {
     }
   }
 }
-
-

@@ -17,7 +17,7 @@ import { VideoModule } from './video/video.module';
 import { ServiceModule } from './service/service.module';
 import { ReviewModule } from './review/review.module';
 import { ChapterModule } from './chapter/chapter.module';
-import { ConfirmationCodeService } from './auth/auth.code.servise';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -56,8 +56,8 @@ import { ConfirmationCodeService } from './auth/auth.code.servise';
     ServiceModule,
     ReviewModule,
     ChapterModule,
-    
   ],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule implements NestModule {

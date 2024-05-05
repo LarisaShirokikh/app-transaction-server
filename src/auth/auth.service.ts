@@ -25,13 +25,11 @@ export class AuthService {
     if (!passIsMatch) throw new UnauthorizedException('Пароль некорректный');
     if (user && passIsMatch) return user;
     return null;
-    
   }
 
   async login(user: IUser) {
     const { id, email } = user;
 
-    
     return {
       id,
       email,

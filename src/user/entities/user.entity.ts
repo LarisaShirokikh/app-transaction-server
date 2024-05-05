@@ -1,6 +1,13 @@
 // user.entity.ts
 
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { ConfirmationCode } from './confirmation-code.entity';
 import { Video } from 'src/video/entities/video.entity';
 import { Review } from 'src/review/entities/review.entity';
@@ -18,10 +25,9 @@ export class User {
 
   @Column({ default: false })
   isSuperAdmin: boolean;
-  
+
   @Column({ nullable: true })
   password: string;
-
 
   @Column({ nullable: true })
   phone: string;

@@ -18,16 +18,16 @@ export class ConfirmationCodeService {
     const confirmationCode = this.confirmationCodeRepository.create({
       user: user,
       code: verificationCode,
-      isConfirmed: false
+      isConfirmed: false,
     });
     return this.confirmationCodeRepository.save(confirmationCode);
   }
 
-//   async confirmCode(id: number): Promise<void> {
-//     const confirmationCode = await this.confirmationCodeRepository.findOne(id);
-//     if (confirmationCode) {
-//       confirmationCode.isConfirmed = true;
-//       await this.confirmationCodeRepository.save(confirmationCode);
-//     }
-//   }
+  //   async confirmCode(id: number): Promise<void> {
+  //     const confirmationCode = await this.confirmationCodeRepository.findOne(id);
+  //     if (confirmationCode) {
+  //       confirmationCode.isConfirmed = true;
+  //       await this.confirmationCodeRepository.save(confirmationCode);
+  //     }
+  //   }
 }
