@@ -15,7 +15,7 @@ async function bootstrap() {
 		origin: [
 			'http://localhost:3000',
 			'http://localhost:8080',
-			'http://31.129.56.94:3000',
+			'http://31.129.56.94',
 			'http://192.168.1.4:3000'
 		],
 		allowedHeaders:
