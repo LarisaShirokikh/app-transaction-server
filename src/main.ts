@@ -11,17 +11,18 @@ async function bootstrap() {
 	app.use(cookieParser())
 	//app.enableCors()
 
-	app.enableCors({
-		origin: [
-			'http://localhost:3000',
-			'http://localhost:8080',
-			'http://31.129.56.94:3000',
-		],
-		allowedHeaders:
-			'Authorization ,X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Observe',
-		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-		credentials: true //access-control-allow-credentials:true
-	})
+	// app.enableCors({
+	// 	origin: [
+	// 		'http://localhost:3000',
+	// 		'http://localhost:8080',
+	// 		'http://31.129.56.94:3000',
+	// 		'http://192.168.0.182:3000'
+	// 	],
+	// 	allowedHeaders:
+	// 		'Authorization ,X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Observe',
+	// 	methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+	// 	credentials: true //access-control-allow-credentials:true
+	// })
 	await app.listen(PORT)
 	console.log(`Сервер запущен и работает на порту ${PORT}`)
 }
