@@ -17,7 +17,6 @@ import { ServiceModule } from './service/service.module'
 import { ReviewModule } from './review/review.module'
 import { ChapterModule } from './chapter/chapter.module'
 import { AppController } from './app.controller'
-import { CorsMiddleware } from './middleware/cors.middleware'
 
 @Module({
 	imports: [
