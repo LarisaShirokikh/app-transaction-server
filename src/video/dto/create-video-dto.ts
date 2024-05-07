@@ -1,10 +1,10 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator'
 
 export class CreateVideoDto {
-  @IsNotEmpty()
-  name: string;
+	@IsNotEmpty()
+	name: string
 
-  @IsString({ message: 'Неверный формат значения фото' })
-  @IsOptional()
-  video?: File;
+	@IsString({ message: 'Неверный формат значения фото' })
+	@IsOptional()
+	video?: File
 }

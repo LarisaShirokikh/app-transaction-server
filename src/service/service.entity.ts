@@ -1,42 +1,42 @@
 import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+	Entity,
+	Column,
+	PrimaryGeneratedColumn,
+	CreateDateColumn,
+	UpdateDateColumn
+} from 'typeorm'
 
 @Entity()
 export class Service {
-  @PrimaryGeneratedColumn()
-  id: number;
+	@PrimaryGeneratedColumn()
+	id: number
 
-  @Column()
-  serviceName: string;
+	@Column()
+	serviceName: string
 
-  @Column()
-  shotDesc: string;
+	@Column()
+	shotDesc: string
 
-  @Column()
-  serviceCon: string;
+	@Column()
+	serviceCon: string
 
-  @Column()
-  price: string;
+	@Column()
+	price: string
 
-  @Column()
-  decor: string;
+	@Column()
+	decor: string
 
-  @Column()
-  decorDesc: string;
+	@Column()
+	decorDesc: string
 
-  @Column('simple-array', { nullable: true })
-  photo: string;
+	@Column('simple-array', { nullable: true })
+	photo: string
 
-  @CreateDateColumn()
-  createdAt: Date;
+	@CreateDateColumn()
+	createdAt: Date
 
-  @UpdateDateColumn()
-  updatedAt: Date;
+	@UpdateDateColumn()
+	updatedAt: Date
 
-  // Добавьте другие поля по необходимости
+	// Добавьте другие поля по необходимости
 }
