@@ -9,18 +9,21 @@ async function bootstrap() {
 
 	app.setGlobalPrefix('api')
 	app.use(cookieParser())
-	//app.enableCors()
 
 	app.enableCors({
-		origin: [
-			'https://dverietalon.ru',
-			'https://dverietalon.online',
-			'http://двериеталон.рф'
-		],
-		allowedHeaders:
+		'origin': "*",
+		//['*'
+			// 'https://dverietalon.ru',
+			// 'https://dverietalon.online',
+			// 'http://двериеталон.рф',
+			// 'http://localhost:3000',
+			// 'http://localhost:8080'
+		//],
+		'allowedHeaders':
 			'Authorization ,X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Observe',
-		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-		credentials: true //access-control-allow-credentials:true
+		'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+		'credentials': true,
+		'exposedHeaders': 'set-cookie'
 	})
 	await app.listen(PORT)
 	console.log(`Сервер запущен и работает на порту ${PORT}`)
