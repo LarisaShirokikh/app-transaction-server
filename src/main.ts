@@ -5,7 +5,9 @@ import * as cookieParser from 'cookie-parser'
 const PORT = process.env.PORT || 4200
 
 async function bootstrap() {
-	const app = await NestFactory.create(AppModule)
+	const app = await NestFactory.create(AppModule, {
+		cors: true
+	})
 
 	app.setGlobalPrefix('api')
 	app.use(cookieParser())
@@ -18,8 +20,16 @@ async function bootstrap() {
 			'http://localhost:3000',
 			'http://localhost:8080'
 		],
-		allowedHeaders:
-			'Authorization ,X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Observe',
+		allowedHeaders: [
+			'Access-Control-Allow-Origin',
+			'Access-Control-Allow-Headers',
+			'Authorization',
+			'X-Requested-With',
+			'X-HTTP-Method-Override',
+			'Content-Type',
+			'Accept',
+			'Observe'
+		],
 		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
 		credentials: true,
 		exposedHeaders: 'set-cookie'
