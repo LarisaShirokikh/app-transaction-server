@@ -16,14 +16,15 @@ async function bootstrap() {
 			'https://dverietalon.online',
 			'http://двериеталон.рф',
 			'http://localhost:3000',
-			'http://localhost:8080'
+			'http://localhost:8080',
+			'http://localhost:4200'
 		],
 		allowedHeaders: 'Content-Type, Authorization',
 		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
 		credentials: true,
-		exposedHeaders: ['set-cookie'], 
-		preflightContinue: false, 
-		optionsSuccessStatus: 204 
+		exposedHeaders: ['set-cookie'],
+		preflightContinue: false,
+		optionsSuccessStatus: 204
 	})
 	await app.listen(PORT)
 	console.log(`Сервер запущен и работает на порту ${PORT}`)
