@@ -11,19 +11,18 @@ async function bootstrap() {
 	app.use(cookieParser())
 
 	app.enableCors({
-		'origin': "*",
-		//['*'
-			// 'https://dverietalon.ru',
-			// 'https://dverietalon.online',
-			// 'http://двериеталон.рф',
-			// 'http://localhost:3000',
-			// 'http://localhost:8080'
-		//],
-		'allowedHeaders':
+		origin: [
+			'https://dverietalon.ru',
+			'https://dverietalon.online',
+			'http://двериеталон.рф',
+			'http://localhost:3000',
+			'http://localhost:8080'
+		],
+		allowedHeaders:
 			'Authorization ,X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Observe',
-		'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-		'credentials': true,
-		'exposedHeaders': 'set-cookie'
+		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+		credentials: true,
+		exposedHeaders: 'set-cookie'
 	})
 	await app.listen(PORT)
 	console.log(`Сервер запущен и работает на порту ${PORT}`)
