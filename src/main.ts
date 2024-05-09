@@ -11,16 +11,15 @@ async function bootstrap() {
 	app.use(cookieParser())
 
 	app.enableCors({
-		origin: [
-			'*',
-			'https://dverietalon.ru',
-			'https://dverietalon.online',
-			'http://двериеталон.рф',
-			'http://localhost:3000',
-			'http://localhost:8080',
-			'http://localhost:4200',
-			'webpack://vue3-ts-doors-store'
-		],
+		origin: '*',
+		//[
+			// 'https://dverietalon.ru',
+			// 'https://dverietalon.online',
+			// 'https://двериеталон.рф',
+			// 'http://localhost:3000',
+			// 'http://localhost:8080',
+			// 'http://localhost:4200'
+		//],
 		allowedHeaders: ['Content-Type', 'Authorization'],
 		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
 		credentials: true,
