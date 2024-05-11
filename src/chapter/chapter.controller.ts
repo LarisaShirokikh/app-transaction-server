@@ -33,11 +33,13 @@ export class ChapterController {
 		@UploadedFile() photo,
 		@Body() createChapterDto: CreateChapterDto
 	) {
+		console.log('create chapter', createChapterDto)
 		try {
 			const savedChapter = await this.chapterService.create(
 				createChapterDto,
-				photo ? 'file' : 'link', // Определяем тип фото в зависимости от наличия файла
+				photo ? 'file' : 'link',
 				photo ? photo.filename : null
+				//photo
 			)
 
 			return savedChapter

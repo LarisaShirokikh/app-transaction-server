@@ -29,6 +29,7 @@ export class ChapterService {
 		} else if (photoType === 'file' && photoFileName) {
 			// Обработка случая, когда приходит файл с фото
 			photoPath = `/uploads/${photoFileName}`
+			
 		}
 		//@ts-ignore
 		const chapter = this.chapterRepository.create({
